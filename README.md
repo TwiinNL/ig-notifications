@@ -32,6 +32,16 @@ sushi build .
 
 Requires Java, Node (SUSHI) and Jekyll. The template is set in `ig.ini`, not in `sushi-config.yaml`: SUSHI 3.20.1 reports the `template` property as no longer supported.
 
+## Invariant tests
+
+`test/invalid/` holds one invalid instance per invariant (file name = invariant key; `twiin-st-5b` is a second case for `twiin-st-5`). They are outside `input/` and not published. After a build, run:
+
+```sh
+test/validate-invalid.sh path/to/validator_cli.jar
+```
+
+The script validates each file against `output/package.tgz` and fails if the validator does not report the invariant named in the file name.
+
 ## CI
 
 `.github/workflows/build.yml` runs on pull requests and pushes to `main`: SUSHI, download of IG Publisher 3.0.0 (pinned), build, upload of `output/` (including `qa.html`) as artifact `ig-output`.

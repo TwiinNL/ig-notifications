@@ -1,0 +1,53 @@
+{
+  "resourceType": "Parameters",
+  "id": "twiin-st-5b",
+  "meta": {
+    "profile": [
+      "https://fhir.twiin.nl/ig/notifications/StructureDefinition/twiin-subscription-status"
+    ]
+  },
+  "parameter": [
+    {
+      "name": "subscription",
+      "valueReference": {
+        "reference": "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
+      }
+    },
+    {
+      "name": "topic",
+      "valueCanonical": "https://example.org/fhir/SubscriptionTopic/task-status-change"
+    },
+    {
+      "name": "status",
+      "valueCode": "active"
+    },
+    {
+      "name": "type",
+      "valueCode": "query-status"
+    },
+    {
+      "name": "events-since-subscription-start",
+      "valueString": "44"
+    },
+    {
+      "name": "notification-event",
+      "part": [
+        {
+          "name": "event-number",
+          "valueString": "44"
+        },
+        {
+          "name": "authorization-type",
+          "valueCoding": {
+            "system": "https://example.org/auth",
+            "code": "example"
+          }
+        },
+        {
+          "name": "authorization-value",
+          "valueString": "x"
+        }
+      ]
+    }
+  ]
+}
