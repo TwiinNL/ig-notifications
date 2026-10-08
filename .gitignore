@@ -1,0 +1,11 @@
+output/
+temp/
+template/
+input-cache/
+fsh-generated/
+Requirements-fromNarrative.json
+.DS_Store
+_build.sh
+_build.bat
+_gencontinuous.sh
+_gencontinuous.bat
