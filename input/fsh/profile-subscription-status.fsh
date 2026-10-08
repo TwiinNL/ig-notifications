@@ -7,19 +7,6 @@ Description: "Subscription status Parameters under TA Notifications (TA section 
 * ^experimental = false
 * obeys twiin-st-1 and twiin-st-2 and twiin-st-3 and twiin-st-4 and twiin-st-5
 * parameter[topic] 1..1
-* parameter[notificationEvent].part contains
-    authType 0..1 and
-    authValue 0..1
-* parameter[notificationEvent].part[authType] ^short = "Authorization mechanism of the authorization value (provisional)"
-* parameter[notificationEvent].part[authType] ^definition = "Identifies the authorization mechanism that authorization-value belongs to. Provisional: not defined in Backport IG 1.1.0; slice name and part name follow the 1.2.0 ballot of the Backport IG (notification-authorization-hint) and may change with a published version."
-* parameter[notificationEvent].part[authType].name = "authorization-type"
-* parameter[notificationEvent].part[authType].value[x] 1..1
-* parameter[notificationEvent].part[authType].value[x] only Coding
-* parameter[notificationEvent].part[authValue] ^short = "Authorization value for the subsequent pull (provisional)"
-* parameter[notificationEvent].part[authValue] ^definition = "Authorization value the Subscription Client needs for the subsequent pull. Provisional: not defined in Backport IG 1.1.0; slice name and part name follow the 1.2.0 ballot of the Backport IG (notification-authorization-hint) and may change with a published version."
-* parameter[notificationEvent].part[authValue].name = "authorization-value"
-* parameter[notificationEvent].part[authValue].value[x] 1..1
-* parameter[notificationEvent].part[authValue].value[x] only string
 
 Invariant: twiin-st-1
 Description: "The subscription reference is an absolute http(s) URL."
@@ -42,6 +29,6 @@ Expression: "parameter.where(name = 'notification-event').part.where(name = 'foc
 Severity: #warning
 
 Invariant: twiin-st-5
-Description: "authorization-type and authorization-value occur together, and only if type is event-notification."
-Expression: "parameter.where(name = 'notification-event').all(part.where(name = 'authorization-type').exists() = part.where(name = 'authorization-value').exists()) and (parameter.where(name = 'notification-event').part.where(name = 'authorization-type' or name = 'authorization-value').exists() implies parameter.where(name = 'type' and value = 'event-notification').exists())"
+Description: "A notification-event has at most one authorization-type part, with a Coding value, and at most one authorization-value part, with a string value; the two occur together, and only if type is event-notification or query-event. The part names are provisional: they are not defined in Backport IG 1.1.0 and follow the 1.2.0 ballot of the Backport IG (notification-authorization-hint)."
+Expression: "parameter.where(name = 'notification-event').all(part.where(name = 'authorization-type').count() <= 1 and part.where(name = 'authorization-value').count() <= 1 and (part.where(name = 'authorization-type').exists() = part.where(name = 'authorization-value').exists()) and part.where(name = 'authorization-type').all(value.ofType(Coding).exists()) and part.where(name = 'authorization-value').all(value.ofType(string).exists())) and (parameter.where(name = 'notification-event').part.where(name = 'authorization-type' or name = 'authorization-value').exists() implies parameter.where(name = 'type' and (value = 'event-notification' or value = 'query-event')).exists())"
 Severity: #error

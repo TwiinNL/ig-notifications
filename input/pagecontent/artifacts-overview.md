@@ -10,7 +10,7 @@ This page is informative. It lists the artifacts in this guide and the section o
 
 Twiin Subscription Status does not restrict the values of `type`, because the same Parameters resource is returned by `$status` and `$events`. The restriction to handshake, heartbeat and event-notification is in Twiin Subscription Notification.
 
-The `authorization-type` and `authorization-value` parts in Twiin Subscription Status are provisional. They are not defined in Backport IG 1.1.0; their names follow the 1.2.0 ballot of the Backport IG.
+The `authorization-type` (Coding) and `authorization-value` (string) parts of `notification-event` are checked by invariant `twiin-st-5`, not by slices. They are allowed when type is event-notification or query-event. The part names are provisional: they are not defined in Backport IG 1.1.0 and follow the 1.2.0 ballot of the Backport IG.
 
 Some invariants interpret the TA:
 
@@ -43,5 +43,6 @@ The capability statement imports the Backport IG Subscription Server capability 
 | [Notification: event-notification, empty](Bundle-notification-event-empty.html) | Resource Definitions → Notification (not a TA example) |
 | [Notification: event-notification, full-resource](Bundle-notification-event-full-resource.html) | Resource Definitions → Notification (not a TA example) |
 | [$status response](Bundle-status-response.html) | $status and $events Operations (not a TA example) |
+| [$events response with authorization value](Bundle-events-response-auth.html) | $status and $events Operations; Resource Definitions → Notification → Authorization value (not a TA example) |
 
 The Subscription examples add `reason`, which FHIR R4 requires and the TA examples omit.
