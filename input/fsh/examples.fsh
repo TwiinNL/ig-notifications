@@ -154,6 +154,8 @@ Title: "$status response"
 Description: "Response to GET [base]/Subscription/[id]/$status: a searchset Bundle with the subscription status (TA section $status and $events Operations). Not an example from the TA."
 * type = #searchset
 * total = 1
+* link[0].relation = "self"
+* link[0].url = "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$status"
 * entry[0].fullUrl = "urn:uuid:2d9f4b1e-6a3c-4e78-9b5d-1f8c0a7e3d62"
 * entry[0].resource = status-response-status
 * entry[0].search.mode = #match
