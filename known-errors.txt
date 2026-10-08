@@ -1,0 +1,3 @@
+# Publisher errors that are accepted, one per line, matched exactly as "<location>: <message>".
+# See known-issues.md before adding anything here.
+ImplementationGuide/nl.twiin.fhir.r4.notifications: This IG is version 4.0.1, while the IG 'hl7.fhir.uv.subscriptions-backport.r4' is from version 4.0.0

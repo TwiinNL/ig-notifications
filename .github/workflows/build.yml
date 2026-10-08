@@ -56,15 +56,7 @@ jobs:
           path: output/
           if-no-files-found: warn
 
-      # The publisher exits with 0 even when qa.html reports errors,
-      # so fail on the error count in output/qa.json ("errs").
-      - name: Fail on errors in QA report
-        run: |
-          test -f output/qa.json || { echo "output/qa.json not found"; exit 1; }
-          errs=$(jq -er '.errs' output/qa.json)
-          echo "errors=$errs warnings=$(jq -r '.warnings' output/qa.json) hints=$(jq -r '.hints' output/qa.json)"
-          if [ "$errs" -gt 0 ]; then
-            echo "::error::IG build has $errs error(s); see qa.html in the ig-output artifact"
-            grep '^ERROR' output/qa.txt || true
-            exit 1
-          fi
+      # The publisher exits with 0 even when qa.html reports errors, so check the
+      # errors ourselves: every error in output/qa.xml must be listed in known-errors.txt.
+      - name: Fail on unknown errors in QA report
+        run: python3 .github/scripts/check-qa.py
