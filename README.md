@@ -37,9 +37,11 @@ Requires Java, Node (SUSHI) and Jekyll. The template is set in `ig.ini`, not in 
 
 `.github/workflows/build.yml` runs on pull requests and pushes to `main`: SUSHI, download of IG Publisher 3.0.0 (pinned), build, upload of `output/` (including `qa.html`) as artifact `ig-output`.
 
-The build fails on any error in the QA report. The publisher exit code cannot be used for this: it exits with 0 on a build whose `qa.html` lists errors (see [ig-core](https://github.com/TwiinNL/ig-core)). The check therefore reads `errs` from `output/qa.json`. Warnings and hints do not fail the build. Errors cannot be suppressed via `input/ignoreWarnings.txt`.
+The build fails on every publisher error that is not listed in [known-errors.txt](known-errors.txt) (see [known-issues.md](known-issues.md)). The publisher exit code cannot be used for this: it exits with 0 on a build whose `qa.html` lists errors (see [ig-core](https://github.com/TwiinNL/ig-core)). Warnings and hints do not fail the build. Errors cannot be suppressed via `input/ignoreWarnings.txt`.
 
-The `qa.json` layout is not documented as far as I could verify; the CI pins publisher 3.0.0 for that reason (`PUBLISHER_VERSION` in the workflow). On every publisher update, re-check that `errs` is still present and still counts the errors listed in `qa.html`.
+`.github/scripts/check-qa.py` reads the individual errors from `output/qa.xml`, a FHIR Bundle of OperationOutcomes written by the publisher. Chosen over the alternatives because it is structured (severity, message and expression as separate elements): `qa.txt` and `qa-eslintcompact.txt` are text for humans, and they carry absolute local paths or no location. Each error becomes one line `<location>: <message>`, with the issue's `expression` as location (file name if there is none), and must match a line in `known-errors.txt` exactly. Matching is on text and location, not on count. As a cross-check the script requires the number of errors in `qa.xml` to equal `errs` in `output/qa.json`, and fails otherwise.
+
+Neither file's layout is documented as far as I could verify; both were inspected with IG Publisher 3.0.0, which is why the CI pins that version (`PUBLISHER_VERSION` in the workflow). On every publisher update, re-check that `qa.xml` still lists the same errors as `qa.html`. Entries in `known-errors.txt` that no longer occur are reported as a notice.
 
 ## License
 
