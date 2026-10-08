@@ -45,4 +45,4 @@ The capability statement imports the Backport IG Subscription Server capability 
 | [$status response](Bundle-status-response.html) | $status and $events Operations (not a TA example) |
 | [$events response with authorization value](Bundle-events-response-auth.html) | $status and $events Operations; Resource Definitions → Notification → Authorization value (not a TA example) |
 
-The Subscription examples add `reason`, which FHIR R4 requires and the TA examples omit.
+The Subscription examples add `reason`, which FHIR R4 requires and the TA examples omit. All examples use the hosts `sender.example.org` and `receiver.example.org` instead of `sender.example` and `receiver.example` in the TA: the IG Publisher reports an error for each absolute reference to a `.example` host that it cannot resolve, and not for `example.org`.

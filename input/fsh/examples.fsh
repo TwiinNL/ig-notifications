@@ -8,14 +8,14 @@ RuleSet: TaSubscription
 // Subscription.reason is 1..1 in FHIR R4; the TA examples omit it.
 * reason = "Notification of Task status changes"
 * channel.type = #rest-hook
-* channel.endpoint = "https://receiver.example/fhir/notifications"
+* channel.endpoint = "https://receiver.example.org/fhir/notifications"
 * channel.payload = #application/fhir+json
 * channel.payload.extension[content].url = $content
 * channel.payload.extension[content].valueCode = #id-only
 
 RuleSet: TaStatus(status, type)
 * parameter[subscription].name = "subscription"
-* parameter[subscription].valueReference.reference = "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
+* parameter[subscription].valueReference.reference = "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
 * parameter[topic].name = "topic"
 * parameter[topic].valueCanonical = "https://example.org/fhir/SubscriptionTopic/task-status-change"
 * parameter[status].name = "status"
@@ -27,7 +27,7 @@ RuleSet: TaStatusEntry(fullUrl, status)
 * entry[0].fullUrl = "{fullUrl}"
 * entry[0].resource = {status}
 * entry[0].request.method = #GET
-* entry[0].request.url = "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$status"
+* entry[0].request.url = "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$status"
 * entry[0].response.status = "200"
 
 Instance: subscription-create-id-only
@@ -81,7 +81,7 @@ Title: "Notification: event-notification, id-only"
 Description: "Id-only event-notification for a topic that monitors Task (TA section Event Notification → Example). The second entry identifies the resource that triggered the event and carries no resource content."
 * type = #history
 * insert TaStatusEntry(urn:uuid:c3a5d8f1-9b2e-4d67-8a4c-5e1f7b9d2a36, notification-event-id-only-status)
-* entry[1].fullUrl = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* entry[1].fullUrl = "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 * entry[1].request.method = #PUT
 * entry[1].request.url = "Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 * entry[1].response.status = "200"
@@ -96,7 +96,7 @@ Usage: #inline
 * parameter[notificationEvent].part[eventTimestamp].name = "timestamp"
 * parameter[notificationEvent].part[eventTimestamp].valueInstant = "2026-07-16T09:15:00Z"
 * parameter[notificationEvent].part[eventFocus].name = "focus"
-* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 
 Instance: notification-event-empty
 InstanceOf: TwiinSubscriptionNotification
@@ -123,7 +123,7 @@ Title: "Notification: event-notification, full-resource"
 Description: "Full-resource event-notification: focus plus the resource content in the second entry (TA section Resource Definitions → Notification). Not an example from the TA."
 * type = #history
 * insert TaStatusEntry(urn:uuid:7a1c3e5f-9b2d-4f60-8a4e-6d0b2c8f1e37, notification-event-full-resource-status)
-* entry[1].fullUrl = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* entry[1].fullUrl = "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 * entry[1].resource = 5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d
 * entry[1].request.method = #PUT
 * entry[1].request.url = "Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
@@ -139,7 +139,7 @@ Usage: #inline
 * parameter[notificationEvent].part[eventTimestamp].name = "timestamp"
 * parameter[notificationEvent].part[eventTimestamp].valueInstant = "2026-07-16T11:30:00Z"
 * parameter[notificationEvent].part[eventFocus].name = "focus"
-* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 
 Instance: 5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d
 InstanceOf: Task
@@ -174,9 +174,9 @@ Description: "Response to GET [base]/Subscription/[id]/$events replaying one id-
 * entry[0].fullUrl = "urn:uuid:5e3a9c1d-7b4f-4e28-a6d0-9f2b8c4e1a73"
 * entry[0].resource = events-response-auth-status
 * entry[0].request.method = #GET
-* entry[0].request.url = "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$events?eventsSinceNumber=42&eventsUntilNumber=42"
+* entry[0].request.url = "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$events?eventsSinceNumber=42&eventsUntilNumber=42"
 * entry[0].response.status = "200"
-* entry[1].fullUrl = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* entry[1].fullUrl = "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 * entry[1].request.method = #PUT
 * entry[1].request.url = "Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 * entry[1].response.status = "200"
@@ -191,7 +191,7 @@ Usage: #inline
 * parameter[notificationEvent].part[eventTimestamp].name = "timestamp"
 * parameter[notificationEvent].part[eventTimestamp].valueInstant = "2026-07-16T09:15:00Z"
 * parameter[notificationEvent].part[eventFocus].name = "focus"
-* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
 * parameter[notificationEvent].part[3].name = "authorization-type"
 * parameter[notificationEvent].part[3].valueCoding = https://example.org/CodeSystem/authorization-type#example
 * parameter[notificationEvent].part[4].name = "authorization-value"

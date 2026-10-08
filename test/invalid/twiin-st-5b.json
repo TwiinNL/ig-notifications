@@ -10,7 +10,7 @@
     {
       "name": "subscription",
       "valueReference": {
-        "reference": "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
+        "reference": "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
       }
     },
     {

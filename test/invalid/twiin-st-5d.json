@@ -22,7 +22,7 @@
           {
             "name": "subscription",
             "valueReference": {
-              "reference": "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
+              "reference": "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
             }
           },
           {
@@ -51,7 +51,7 @@
               {
                 "name": "focus",
                 "valueReference": {
-                  "reference": "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+                  "reference": "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
                 }
               },
               {
@@ -71,14 +71,14 @@
       },
       "request": {
         "method": "GET",
-        "url": "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$status"
+        "url": "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$status"
       },
       "response": {
         "status": "200"
       }
     },
     {
-      "fullUrl": "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d",
+      "fullUrl": "https://sender.example.org/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d",
       "request": {
         "method": "PUT",
         "url": "Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
