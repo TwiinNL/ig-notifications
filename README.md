@@ -21,7 +21,6 @@ Built with [SUSHI](https://fshschool.org/docs/sushi/) and the HL7 IG Publisher.
 
 - TODO: fill in the TA Notifications version in the IG once TA Notifications 0.9 is published. The IG refers to "TA Notifications" without version until then.
 - Pin the template version in `ig.ini` (currently `fhir.base.template#current`).
-- Remove the placeholder artifact (`input/fsh/placeholder.fsh`, Questionnaire `twiin-placeholder`). R4 requires at least one `ImplementationGuide.definition.resource`, so an IG without artifacts cannot build without errors.
 
 ## Build
 
