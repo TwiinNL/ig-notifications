@@ -10,3 +10,7 @@ Description: "Scaffold placeholder; remove before first release."
 * description = "Scaffold placeholder; remove before first release."
 * status = #draft
 * experimental = true
+* item[+].linkId = "deliberate-error"
+* item[=].type = #boolean
+* item[=].initial.valueString = "not a boolean"
+* item[=].answerValueSet = "http://example.org/does-not-exist"
