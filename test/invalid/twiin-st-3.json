@@ -1,0 +1,51 @@
+{
+  "resourceType": "Bundle",
+  "id": "twiin-st-3",
+  "meta": {
+    "profile": [
+      "https://fhir.twiin.nl/ig/notifications/StructureDefinition/twiin-subscription-notification"
+    ]
+  },
+  "type": "history",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:0364d735-381d-4a15-89fd-597e557b0ce2",
+      "resource": {
+        "resourceType": "Parameters",
+        "id": "notification-heartbeat-status",
+        "meta": {
+          "profile": [
+            "https://fhir.twiin.nl/ig/notifications/StructureDefinition/twiin-subscription-status"
+          ]
+        },
+        "parameter": [
+          {
+            "name": "subscription",
+            "valueReference": {
+              "reference": "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59"
+            }
+          },
+          {
+            "name": "topic",
+            "valueCanonical": "https://example.org/fhir/SubscriptionTopic/task-status-change"
+          },
+          {
+            "name": "status",
+            "valueCode": "active"
+          },
+          {
+            "name": "type",
+            "valueCode": "heartbeat"
+          }
+        ]
+      },
+      "request": {
+        "method": "GET",
+        "url": "https://sender.example.org/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$status"
+      },
+      "response": {
+        "status": "200"
+      }
+    }
+  ]
+}

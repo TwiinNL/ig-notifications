@@ -21,7 +21,6 @@ Built with [SUSHI](https://fshschool.org/docs/sushi/) and the HL7 IG Publisher.
 
 - TODO: fill in the TA Notifications version in the IG once TA Notifications 0.9 is published. The IG refers to "TA Notifications" without version until then.
 - Pin the template version in `ig.ini` (currently `fhir.base.template#current`).
-- Remove the placeholder artifact (`input/fsh/placeholder.fsh`, Questionnaire `twiin-placeholder`). R4 requires at least one `ImplementationGuide.definition.resource`, so an IG without artifacts cannot build without errors.
 
 ## Build
 
@@ -32,6 +31,16 @@ sushi build .
 ```
 
 Requires Java, Node (SUSHI) and Jekyll. The template is set in `ig.ini`, not in `sushi-config.yaml`: SUSHI 3.20.1 reports the `template` property as no longer supported.
+
+## Invariant tests
+
+`test/invalid/` holds one invalid instance per invariant (file name = invariant key; `twiin-st-5b` is a second case for `twiin-st-5`). They are outside `input/` and not published. After a build, run:
+
+```sh
+test/validate-invalid.sh path/to/validator_cli.jar
+```
+
+The script validates each file against `output/package.tgz` and fails if the validator does not report the invariant named in the file name.
 
 ## CI
 

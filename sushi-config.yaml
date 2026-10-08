@@ -20,7 +20,13 @@ dependencies:
 pages:
   index.md:
     title: Home
+  artifacts-overview.md:
+    title: Artifacts overview
+  requirements-not-in-artifacts.md:
+    title: Requirements not expressed in artifacts
 
 menu:
   Home: index.html
+  Overview: artifacts-overview.html
+  Not in artifacts: requirements-not-in-artifacts.html
   Artifacts: artifacts.html

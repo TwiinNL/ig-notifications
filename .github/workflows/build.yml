@@ -45,6 +45,15 @@ jobs:
           curl -sSfL -o input-cache/publisher.jar \
             "https://github.com/HL7/fhir-ig-publisher/releases/download/${PUBLISHER_VERSION}/publisher.jar"
 
+      # The published package has an empty .index.json, so the publisher finds none of
+      # its resources. Without the index file, the publisher rebuilds it. See known-issues.md.
+      - name: Work around empty index of Backport package
+        run: |
+          dir="$HOME/.fhir/packages/hl7.fhir.uv.subscriptions-backport.r4#1.1.0"
+          mkdir -p "$dir"
+          curl -sSfL "https://packages.fhir.org/hl7.fhir.uv.subscriptions-backport.r4/1.1.0" | tar xz -C "$dir"
+          rm "$dir/package/.index.json"
+
       - name: Build IG
         run: java -jar input-cache/publisher.jar -ig . -no-sushi
 

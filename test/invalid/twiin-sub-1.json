@@ -1,0 +1,33 @@
+{
+  "resourceType": "Subscription",
+  "id": "twiin-sub-1",
+  "meta": {
+    "profile": [
+      "https://fhir.twiin.nl/ig/notifications/StructureDefinition/twiin-subscription"
+    ]
+  },
+  "channel": {
+    "type": "rest-hook",
+    "endpoint": "https://receiver.example.org/fhir/notifications",
+    "payload": "application/fhir+json",
+    "_payload": {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/subscriptions-backport/StructureDefinition/backport-payload-content",
+          "valueCode": "id-only"
+        }
+      ]
+    }
+  },
+  "status": "requested",
+  "criteria": "Task?status=ready",
+  "_criteria": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/uv/subscriptions-backport/StructureDefinition/backport-filter-criteria",
+        "valueString": "owner=http://fhir.nl/fhir/NamingSystem/ura|12104037"
+      }
+    ]
+  },
+  "reason": "Notification of Task status changes"
+}

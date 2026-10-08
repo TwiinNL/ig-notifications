@@ -15,3 +15,22 @@ Related warnings (not allowlisted, warnings do not fail the build):
 - `ImplementationGuide.dependsOn[2]: The canonical URL http://hl7.org/fhir/uv/subscriptions-backport/ImplementationGuide/hl7.fhir.uv.subscriptions-backport doesn't point to an actual ImplementationGuide resource`
 
 Decision: `fhirVersion` stays 4.0.1. Re-check when the publisher or the Backport version changes.
+
+## Backport package has an empty index
+
+Applies to: IG Publisher 3.0.0, `hl7.fhir.uv.subscriptions-backport.r4#1.1.0`. Worked around in CI, not allowlisted.
+
+The published package contains `package/.index.json` with `"files": []` (checked in the tarball from packages.fhir.org). The publisher loads package resources through this index, finds none of the Backport StructureDefinitions, and stops with `Cannot find or generate snapshot for base definition (http://hl7.org/fhir/uv/subscriptions-backport/StructureDefinition/backport-subscription-notification-r4 ...)`. Without the file, the publisher rebuilds the index.
+
+The CI step "Work around empty index of Backport package" puts the package in the cache and removes `.index.json`. For a local build, remove `~/.fhir/packages/hl7.fhir.uv.subscriptions-backport.r4#1.1.0/package/.index.json` once.
+
+## Backport binds `type` to an R4B/R5 ValueSet
+
+Applies to: IG Publisher 3.0.0, `hl7.fhir.uv.subscriptions-backport.r4#1.1.0`. Allowlisted in [known-errors.txt](known-errors.txt).
+
+`backport-subscription-status-r4` binds `parameter:type.value[x]` to `http://hl7.org/fhir/ValueSet/subscription-notification-type`, which does not exist in FHIR R4. Twiin Subscription Status inherits the binding. Errors:
+
+- `Parameters.parameter.value: The reference http://hl7.org/fhir/ValueSet/subscription-notification-type could not be resolved`
+- `StructureDefinition/twiin-subscription-status: StructureDefinition.snapshot.element[42].binding.valueSet: A definition could not be found for Canonical URL ...`
+
+Related warnings on each example: `ValueSet 'http://hl7.org/fhir/ValueSet/subscription-notification-type' not found`.
