@@ -1,0 +1,26 @@
+id: nl.twiin.fhir.r4.notifications
+canonical: https://fhir.twiin.nl/ig/notifications
+name: TwiinNotifications
+title: Twiin Notifications
+description: Technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel. Based on the HL7 FHIR Subscriptions R5 Backport IG.
+status: draft
+version: 0.1.0
+fhirVersion: 4.0.1
+publisher:
+  name: Twiin
+license: CC-BY-SA-4.0
+copyrightYear: 2026+
+copyright: Copyright 2026 Twiin. Licensed under CC BY-SA 4.0.
+language: en
+releaseLabel: ci-build
+
+dependencies:
+  hl7.fhir.uv.subscriptions-backport.r4: 1.1.0
+
+pages:
+  index.md:
+    title: Home
+
+menu:
+  Home: index.html
+  Artifacts: artifacts.html
