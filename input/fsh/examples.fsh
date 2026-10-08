@@ -164,3 +164,35 @@ Usage: #inline
 * insert TaStatus(active, query-status)
 * parameter[eventsSinceSubscriptionStart].name = "events-since-subscription-start"
 * parameter[eventsSinceSubscriptionStart].valueString = "44"
+
+Instance: events-response-auth
+InstanceOf: Bundle
+Usage: #example
+Title: "$events response with authorization value"
+Description: "Response to GET [base]/Subscription/[id]/$events replaying one id-only event-notification of an out-of-band Subscription, with the provisional authorization-type and authorization-value parts (TA sections $status and $events Operations; Resource Definitions → Notification → Authorization value). Not an example from the TA. The authorization-type code is a placeholder: the codes are defined by GF Authorization."
+* type = #history
+* entry[0].fullUrl = "urn:uuid:5e3a9c1d-7b4f-4e28-a6d0-9f2b8c4e1a73"
+* entry[0].resource = events-response-auth-status
+* entry[0].request.method = #GET
+* entry[0].request.url = "https://sender.example/fhir/Subscription/7f3e9a2c-5d18-4b6f-9c3a-8e2d4f6b1a59/$events?eventsSinceNumber=42&eventsUntilNumber=42"
+* entry[0].response.status = "200"
+* entry[1].fullUrl = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* entry[1].request.method = #PUT
+* entry[1].request.url = "Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* entry[1].response.status = "200"
+
+Instance: events-response-auth-status
+InstanceOf: TwiinSubscriptionStatus
+Usage: #inline
+* insert TaStatus(active, query-event)
+* parameter[notificationEvent].name = "notification-event"
+* parameter[notificationEvent].part[eventNumber].name = "event-number"
+* parameter[notificationEvent].part[eventNumber].valueString = "42"
+* parameter[notificationEvent].part[eventTimestamp].name = "timestamp"
+* parameter[notificationEvent].part[eventTimestamp].valueInstant = "2026-07-16T09:15:00Z"
+* parameter[notificationEvent].part[eventFocus].name = "focus"
+* parameter[notificationEvent].part[eventFocus].valueReference.reference = "https://sender.example/fhir/Task/5f2f9a4e-8c1d-4b6e-9d3a-7c0e2f4b8a1d"
+* parameter[notificationEvent].part[3].name = "authorization-type"
+* parameter[notificationEvent].part[3].valueCoding = https://example.org/CodeSystem/authorization-type#example
+* parameter[notificationEvent].part[4].name = "authorization-value"
+* parameter[notificationEvent].part[4].valueString = "Zk3p9QxT2mVb7LcW8nRy"
