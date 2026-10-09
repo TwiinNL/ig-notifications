@@ -4,7 +4,7 @@ name: TwiinNotifications
 title: Twiin Notifications
 description: Technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel. Based on the HL7 FHIR Subscriptions R5 Backport IG.
 status: draft
-version: 0.1.0
+version: 0.1.0-draft
 fhirVersion: 4.0.1
 publisher:
   name: Twiin
