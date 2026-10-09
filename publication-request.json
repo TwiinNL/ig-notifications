@@ -1,0 +1,17 @@
+{
+  "package-id": "nl.twiin.fhir.r4.notifications",
+  "version": "0.1.0",
+  "mode": "milestone",
+  "status": "draft",
+  "sequence": "Draft",
+  "path": "https://fhir.twiin.nl/ig/notifications/0.1.0",
+  "desc": "First draft publication, technical specification of TA Notifications 0.9",
+  "first": true,
+  "title": "Twiin Notifications",
+  "category": "Infrastructure",
+  "introduction": "Technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel. Based on the HL7 FHIR Subscriptions R5 Backport IG.",
+  "ci-build": "https://github.com/TwiinNL/ig-notifications",
+  "registry-description": "Technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel.",
+  "registry-country": "nl",
+  "registry-authority": "Twiin"
+}

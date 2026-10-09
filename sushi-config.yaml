@@ -12,7 +12,7 @@ license: CC-BY-SA-4.0
 copyrightYear: 2026+
 copyright: Copyright 2026 Twiin. Licensed under CC BY-SA 4.0.
 language: en
-releaseLabel: ci-build
+releaseLabel: "Draft – normative only when referenced by the Twiin afsprakenstelsel"
 
 dependencies:
   hl7.fhir.uv.subscriptions-backport.r4: 1.1.0
