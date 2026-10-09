@@ -69,6 +69,10 @@ The publisher copies `input/images/` over the template's `content/`, so both `ou
 
 The sha-256 of the faulty template file is `7ea6ae46a27c877dc47cc7ac0df4cc05f01b8debcbeec66db372da7577e92383`.
 
+### Release label not shown in the page header
+
+The header shows `0.1.0-draft - ` without the `releaseLabel` from `sushi-config.yaml`. `includes/fragment-pagebegin.html:64` of the template reads `site.data.info.releaselabellang[include.lang]` (`include.lang` is `en` there), but `_data/info.json`, written by `scripts/onGenerate.genJson.xslt:71-83`, only has `releaselabel`; the script writes a fixed list of keys, so no IG parameter can supply `releaselabellang`. Fixed on `main` of HL7/ig-template-base2 in commit 6fc5321 (2025-11-20, reads `site.data.fhir.releaseLabellang`), not in a published version. Not worked around yet: the only fix in this repository is an override of a template include. The publish box ("v0.1.0-draft: Release 1 Draft") is not affected.
+
 ### Two `<h2 id="root">` on the profile history pages
 
 Applies to: `StructureDefinition-<id>.profile.history.html`, one error per profile. The template's `layouts/layout-profile-history.html` has two `<h2 id="root">` lines in a row, and the second is not closed. The publisher's WCAG check reports it as an error. Allowlisted in [known-errors.txt](known-errors.txt) (3 lines, one per profile; the location is the path in `output/`):
