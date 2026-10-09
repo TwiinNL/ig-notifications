@@ -20,7 +20,6 @@ Built with [SUSHI](https://fshschool.org/docs/sushi/) and the HL7 IG Publisher.
 ## TODO before the first release
 
 - TODO: fill in the TA Notifications version in the IG once TA Notifications 0.9 is published. The IG refers to "TA Notifications" without version until then.
-- Pin the template version in `ig.ini` (currently `fhir.base.template#current`).
 
 ## Build
 
@@ -31,6 +30,8 @@ sushi build .
 ```
 
 Requires Java, Node (SUSHI) and Jekyll. The template is set in `ig.ini`, not in `sushi-config.yaml`: SUSHI 3.20.1 reports the `template` property as no longer supported.
+
+The template is pinned to `fhir2.base.template#0.1.0`. `fhir.base.template` is no longer supported and the IG Publisher will refuse IGs that depend on it, see the [FHIR security notice of 17 March 2026](https://fhir.org/guides/security-notices/2026-03-npm-dependencies.html). `fhir2.base.template` builds all pages into `output/en/`; the pages in the root of `output/` are redirect stubs. This template version has two bugs, worked around in this repository: see [known-issues.md](known-issues.md).
 
 ## Invariant tests
 
@@ -50,9 +51,11 @@ The runner is pinned to `ubuntu-24.04` (not `ubuntu-latest`), so a change of the
 
 The build fails on every publisher error that is not listed in [known-errors.txt](known-errors.txt) (see [known-issues.md](known-issues.md)). The publisher exit code cannot be used for this: it exits with 0 on a build whose `qa.html` lists errors (see [ig-core](https://github.com/TwiinNL/ig-core)). Warnings and hints do not fail the build. Errors cannot be suppressed via `input/ignoreWarnings.txt`.
 
-`.github/scripts/check-qa.py` reads the individual errors from `output/qa.xml`, a FHIR Bundle of OperationOutcomes written by the publisher. Chosen over the alternatives because it is structured (severity, message and expression as separate elements): `qa.txt` and `qa-eslintcompact.txt` are text for humans, and they carry absolute local paths or no location. Each error becomes one line `<location>: <message>`, with the issue's `expression` as location (file name if there is none), and must match a line in `known-errors.txt` exactly. Matching is on text and location, not on count. As a cross-check the script requires the number of errors in `qa.xml` to equal `errs` in `output/qa.json`, and fails otherwise.
+`.github/scripts/check-qa.py` reads the errors from two files. `output/qa.xml` is a FHIR Bundle of OperationOutcomes written by the publisher; it is structured (severity, message and expression as separate elements), and each error becomes one line `<location>: <message>`, with the issue's `expression` as location (file name if there is none). `output/qa.txt` also lists the errors of the HTML check (for example the WCAG heading check on the generated pages), which `qa.xml` does not contain (`qa.json` only counts them); each `ERROR:` line becomes one line `<location>: <message>`, with the absolute path of `output/` replaced by `output/`. Every line must match a line in `known-errors.txt` exactly. Matching is on text and location, not on count. As a cross-check the script requires the errors of both files, counted once when both list them, to equal `errs` in `output/qa.json`, and fails otherwise.
 
-Neither file's layout is documented as far as I could verify; both were inspected with IG Publisher 3.0.0, which is why the CI pins that version (`PUBLISHER_VERSION` in the workflow). On every publisher update, re-check that `qa.xml` still lists the same errors as `qa.html`. Entries in `known-errors.txt` that no longer occur are reported as a notice.
+The step "Test language redirect" runs `node test/lang-redirects.test.js` after the build: it checks that the redirect script in `output/` is our override of the template file and that browsers with language `nl`, `nl-NL`, `de`, `en` and `en-US` are all sent to `en/<page>`. The override (`input/images/assets/js/lang-redirects.js`) is a source file of the IG, so every build from this repository applies it, including the build for publication with `-go-publish`; that build has not been run for this change, so check `output/assets/js/lang-redirects.js` (and the copy in `output/en/`) before publishing. See [known-issues.md](known-issues.md).
+
+Neither file's layout is documented as far as I could verify; both were inspected with IG Publisher 3.0.0, which is why the CI pins that version (`PUBLISHER_VERSION` in the workflow). On every publisher update, re-check that `qa.xml` and `qa.txt` together still list the same errors as `qa.html`. Entries in `known-errors.txt` that no longer occur are reported as a notice.
 
 ## License
 
