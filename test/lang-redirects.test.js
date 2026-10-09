@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Checks the language redirect of the published stub pages. After a build, run from the repo root:
+// Checks the language redirect of the published stub pages: every browser language ends up on
+// en/<page>, and query string and fragment are kept. After a build, run from the repo root:
 //   node test/lang-redirects.test.js
 // See known-issues.md, "Template 0.1.0 redirect stops after the first language".
 const fs = require("fs");
@@ -26,19 +27,23 @@ for (const copy of OUTPUT_COPIES) {
     continue;
   }
   const src = fs.readFileSync(copy, "utf8");
+  // [language, pathname, search, hash, expected]
   const cases = [
-    ["nl", "/ig/notifications/index.html", "en/index.html"],
-    ["nl-NL", "/ig/notifications/artifacts.html", "en/artifacts.html"],
-    ["de", "/ig/notifications/index.html", "en/index.html"],
-    ["en", "/ig/notifications/StructureDefinition-twiin-subscription.html", "en/StructureDefinition-twiin-subscription.html"],
-    ["en-US", "/ig/notifications/index.html", "en/index.html"],
+    ["nl", "/ig/notifications/index.html", "", "", "en/index.html"],
+    ["nl-NL", "/ig/notifications/artifacts.html", "", "", "en/artifacts.html"],
+    ["de", "/ig/notifications/index.html", "", "", "en/index.html"],
+    ["en", "/ig/notifications/StructureDefinition-twiin-subscription.html", "", "", "en/StructureDefinition-twiin-subscription.html"],
+    ["en-US", "/ig/notifications/index.html", "", "", "en/index.html"],
+    ["nl", "/ig/notifications/index.html", "?a=1&b=2", "#section", "en/index.html?a=1&b=2#section"],
+    ["en-US", "/ig/notifications/artifacts.html", "", "#table", "en/artifacts.html#table"],
+    ["de", "/ig/notifications/artifacts.html", "?q=x", "", "en/artifacts.html?q=x"],
   ];
-  for (const [language, pathname, expected] of cases) {
+  for (const [language, pathname, search, hash, expected] of cases) {
     const targets = [];
-    const window = { location: { pathname, replace: (url) => targets.push(url) } };
+    const window = { location: { pathname, search, hash, replace: (url) => targets.push(url) } };
     new Function("langs", "navigator", "window", src)(["en"], { language }, window);
     const ok = targets.length === 1 && targets[0] === expected;
-    console.log(`${ok ? "ok  " : "FAIL"} ${copy} ${language} ${pathname} -> ${targets.join(", ") || "(no redirect)"}`);
+    console.log(`${ok ? "ok  " : "FAIL"} ${copy} ${language} ${pathname}${search}${hash} -> ${targets.join(", ") || "(no redirect)"}`);
     if (!ok) failed = true;
   }
 }
