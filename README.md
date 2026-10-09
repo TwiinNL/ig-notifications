@@ -1,6 +1,6 @@
 # ig-notifications
 
-FHIR R4 implementation guide for the technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel. It is based on the HL7 FHIR Subscriptions R5 Backport IG 1.1.0 (STU 1.1).
+FHIR R4 implementation guide for the technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel (TA Notifications 0.9 (draft)). It is based on the HL7 FHIR Subscriptions R5 Backport IG 1.1.0 (STU 1.1).
 
 - Package id: `nl.twiin.fhir.r4.notifications`
 - Canonical: https://fhir.twiin.nl/ig/notifications
@@ -17,9 +17,17 @@ Built with [SUSHI](https://fshschool.org/docs/sushi/) and the HL7 IG Publisher.
 - The version of the Backport IG must equal the one used in `nl.twiin.fhir.r4.workflow`, as long as Workflow does not depend on this IG.
 - No dependency on `nl.twiin.fhir.r4.core` (still empty) and none on GF Adressering; add the latter only when an artifact refers to it.
 
-## TODO before the first release
+## Release 0.1.0
 
-- TODO: fill in the TA Notifications version in the IG once TA Notifications 0.9 is published. The IG refers to "TA Notifications" without version until then.
+The IG refers to "TA Notifications 0.9 (draft)" in `index.md` and this README, without a link.
+
+- TODO: link "TA Notifications 0.9" in `index.md` and this README in a patch release, once 0.9 is published.
+
+`releaseLabel` is "Draft – normative only when referenced by the Twiin afsprakenstelsel". `publication-request.json` is for the first publication (`-go-publish` to `ig/` of TwiinNL/fhir); publishing itself is a separate step.
+
+## OIDs
+
+This IG deliberately has no OIDs. The resulting warnings and hints from the publisher are accepted.
 
 ## Build
 
