@@ -1,5 +1,13 @@
 # Known issues
 
+## Milestone publication crashes in IG Publisher 3.0.0
+
+Applies to: IG Publisher 3.0.0, `-go-publish` with `mode: milestone` (or `technical-correction`).
+
+After both publication builds succeed, the run stops with `java.lang.Error: The folder <temp>/ig-builds/<package>#<version>-milestone/output is not inside the website root folder <temp>/web-root/run-<date>` (`IGReleaseRedirectionBuilder.java:158`, called from `PublicationProcess.java:748`). The milestone build output is never inside the working web root, so every milestone publication fails. Observed in a trial run on 2026-10-09 against a copy of TwiinNL/fhir.
+
+Fixed upstream in [HL7/fhir-ig-publisher d64c08c](https://github.com/HL7/fhir-ig-publisher/commit/d64c08c) ("Fix publication crash when building redirects for the milestone build output", 8 October 2026), not yet in a release. Workaround: publish `0.1.0-draft` with `mode: working`. Publish milestone `0.1.0` with the same content once a publisher release contains the fix, and pin that version in CI.
+
 ## Backport IG declares FHIR 4.0.0
 
 Applies to: IG Publisher 3.0.0, `hl7.fhir.uv.subscriptions-backport.r4#1.1.0`. Allowlisted in [known-errors.txt](known-errors.txt).
@@ -60,6 +68,16 @@ A browser whose language is not `en` (for example `nl`, `nl-NL`, `de`) is not re
 The publisher copies `input/images/` over the template's `content/`, so both `output/assets/js/lang-redirects.js` and `output/en/assets/js/lang-redirects.js` are this file. `test/lang-redirects.test.js` checks that, and runs the redirect for `nl`, `nl-NL`, `de`, `en` and `en-US`, and with a query string and a fragment (CI step "Test language redirect"). This is observed behaviour of the publisher, not documented; the test fails if it stops working. The override is a source file of the IG, so every build from this repository applies it, including the publication build (`-go-publish`). That build has not been run for this change; run `node test/lang-redirects.test.js` on its output before publishing.
 
 The sha-256 of the faulty template file is `7ea6ae46a27c877dc47cc7ac0df4cc05f01b8debcbeec66db372da7577e92383`.
+
+### Release label not shown in the page header
+
+Without a workaround the header shows `0.1.0-draft - ` without the `releaseLabel` from `sushi-config.yaml`. Cause: `includes/fragment-pagebegin.html:64` of the template reads `site.data.info.releaselabellang[include.lang]` (`include.lang` is `en` there), but `_data/info.json`, written by `scripts/onGenerate.genJson.xslt:71-83`, only has `releaselabel`. The script writes a fixed list of keys, so no IG parameter can supply `releaselabellang`. Fixed upstream in [HL7/ig-template-base2 6fc5321](https://github.com/HL7/ig-template-base2/commit/6fc5321) (2025-11-20, reads `site.data.fhir.releaseLabellang`), not in a published version.
+
+Workaround: `input/includes/fragment-pagebegin.html` is the template file of 0.1.0 (sha-256 `431379c0d2dabaa855c2d57f051b08e9f0d00cb23bdf70447845bf63170996f9`), copied verbatim with only line 64 changed to `{% assign status = site.data.info.releaselabel %}`. The publisher puts `input/includes/` over the template's includes.
+
+The CI step "Test release label" (`test/release-label.test.js`) checks that every page in `output/en/` with the template header (`<div id="ig-status">`) shows the label, and fails if `template/includes/fragment-pagebegin.html` is no longer the 0.1.0 file: then the override must be reviewed, because it would replace a newer template file. `searchform.html` has its own header from the template and never shows the label; it is not checked.
+
+Remove the override and the CI step when `ig.ini` points to a template version that contains 6fc5321 and the label appears without the override.
 
 ### Two `<h2 id="root">` on the profile history pages
 

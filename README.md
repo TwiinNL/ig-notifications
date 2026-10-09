@@ -5,7 +5,7 @@ FHIR R4 implementation guide for the technical specification of TA Notifications
 - Package id: `nl.twiin.fhir.r4.notifications`
 - Canonical: https://fhir.twiin.nl/ig/notifications
 - FHIR version: 4.0.1
-- Version: 0.1.0 (draft)
+- Version: 0.1.0-draft (working release, see [Release 0.1.0-draft](#release-010-draft))
 - Publisher: Twiin
 - Dependencies: `hl7.fhir.uv.subscriptions-backport.r4#1.1.0` only
 
@@ -17,7 +17,12 @@ Built with [SUSHI](https://fshschool.org/docs/sushi/) and the HL7 IG Publisher.
 - The version of the Backport IG must equal the one used in `nl.twiin.fhir.r4.workflow`, as long as Workflow does not depend on this IG.
 - No dependency on `nl.twiin.fhir.r4.core` (still empty) and none on GF Adressering; add the latter only when an artifact refers to it.
 
-## Release 0.1.0
+## Release 0.1.0-draft
+
+The first publication is the working release `0.1.0-draft` (`mode: working` in `publication-request.json`), not milestone `0.1.0`. IG Publisher 3.0.0 crashes on a milestone publication: `IGReleaseRedirectionBuilder` requires its folder to be inside the website root, but `-go-publish` passes the milestone build output, which is outside it. Fixed upstream in [HL7/fhir-ig-publisher d64c08c](https://github.com/HL7/fhir-ig-publisher/commit/d64c08c) (8 October 2026), not yet in a release. See [known-issues.md](known-issues.md).
+
+Consequence of a working release: only `https://fhir.twiin.nl/ig/notifications/0.1.0-draft/` holds the IG; the root of the canonical holds no copy and no redirects, and no version is marked current. Milestone `0.1.0`, with the same content, follows once a publisher release contains the fix.
+
 
 The IG refers to "TA Notifications 0.9 (draft)" in `index.md` and this README, without a link.
 
