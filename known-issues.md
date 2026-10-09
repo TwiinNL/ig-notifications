@@ -71,7 +71,13 @@ The sha-256 of the faulty template file is `7ea6ae46a27c877dc47cc7ac0df4cc05f01b
 
 ### Release label not shown in the page header
 
-The header shows `0.1.0-draft - ` without the `releaseLabel` from `sushi-config.yaml`. `includes/fragment-pagebegin.html:64` of the template reads `site.data.info.releaselabellang[include.lang]` (`include.lang` is `en` there), but `_data/info.json`, written by `scripts/onGenerate.genJson.xslt:71-83`, only has `releaselabel`; the script writes a fixed list of keys, so no IG parameter can supply `releaselabellang`. Fixed on `main` of HL7/ig-template-base2 in commit 6fc5321 (2025-11-20, reads `site.data.fhir.releaseLabellang`), not in a published version. Not worked around yet: the only fix in this repository is an override of a template include. The publish box ("v0.1.0-draft: Release 1 Draft") is not affected.
+Without a workaround the header shows `0.1.0-draft - ` without the `releaseLabel` from `sushi-config.yaml`. Cause: `includes/fragment-pagebegin.html:64` of the template reads `site.data.info.releaselabellang[include.lang]` (`include.lang` is `en` there), but `_data/info.json`, written by `scripts/onGenerate.genJson.xslt:71-83`, only has `releaselabel`. The script writes a fixed list of keys, so no IG parameter can supply `releaselabellang`. Fixed upstream in [HL7/ig-template-base2 6fc5321](https://github.com/HL7/ig-template-base2/commit/6fc5321) (2025-11-20, reads `site.data.fhir.releaseLabellang`), not in a published version.
+
+Workaround: `input/includes/fragment-pagebegin.html` is the template file of 0.1.0 (sha-256 `431379c0d2dabaa855c2d57f051b08e9f0d00cb23bdf70447845bf63170996f9`), copied verbatim with only line 64 changed to `{% assign status = site.data.info.releaselabel %}`. The publisher puts `input/includes/` over the template's includes.
+
+The CI step "Test release label" (`test/release-label.test.js`) checks that every page in `output/en/` with the template header (`<div id="ig-status">`) shows the label, and fails if `template/includes/fragment-pagebegin.html` is no longer the 0.1.0 file: then the override must be reviewed, because it would replace a newer template file. `searchform.html` has its own header from the template and never shows the label; it is not checked.
+
+Remove the override and the CI step when `ig.ini` points to a template version that contains 6fc5321 and the label appears without the override.
 
 ### Two `<h2 id="root">` on the profile history pages
 
