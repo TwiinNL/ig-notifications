@@ -1,5 +1,5 @@
 {
-  "package-id": "nl.twiin.fhir.r4.notificationsx",
+  "package-id": "nl.twiin.fhir.r4.notifications",
   "version": "0.1.0-draft",
   "mode": "working",
   "status": "draft",
@@ -7,6 +7,7 @@
   "path": "https://fhir.twiin.nl/ig/notifications/0.1.0-draft",
   "desc": "First draft publication, technical specification of TA Notifications 0.9",
   "first": true,
+  "date": "2026-10-12",
   "title": "Twiin Notifications",
   "category": "Infrastructure",
   "introduction": "Technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel. Based on the HL7 FHIR Subscriptions R5 Backport IG.",
