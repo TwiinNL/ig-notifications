@@ -19,15 +19,15 @@ Built with [SUSHI](https://fshschool.org/docs/sushi/) and the HL7 IG Publisher.
 
 ## Release 0.1.1-draft
 
-The second publication is the working release `0.1.1-draft` (`mode: working` in `publication-request.json`, `first: false`), not a milestone. The reason is the same as for `0.1.0-draft`: IG Publisher 3.0.0 crashes on a milestone publication: `IGReleaseRedirectionBuilder` requires its folder to be inside the website root, but `-go-publish` passes the milestone build output, which is outside it. Fixed upstream in [HL7/fhir-ig-publisher d64c08c](https://github.com/HL7/fhir-ig-publisher/commit/d64c08c) (8 October 2026), not yet in a release. See [known-issues.md](known-issues.md).
+The second publication is the working release `0.1.1-draft` (`mode: working` in `publication-request.json`, `first: false`), not a milestone. The reason is the same as for the first publication, `0.1.0-draft`: IG Publisher 3.0.0 crashes on a milestone publication: `IGReleaseRedirectionBuilder` requires its folder to be inside the website root, but `-go-publish` passes the milestone build output, which is outside it. Fixed upstream in [HL7/fhir-ig-publisher d64c08c](https://github.com/HL7/fhir-ig-publisher/commit/d64c08c) (8 October 2026), not yet in a release. See [known-issues.md](known-issues.md).
 
-Consequence of a working release: only `https://fhir.twiin.nl/ig/notifications/0.1.1-draft/` holds the IG; the root of the canonical holds no copy and no redirects, and no version is marked current. `0.1.0-draft` is removed from the site after `0.1.1-draft` is published. Milestone `0.1.1`, with the same content, follows once a publisher release contains the fix.
+Consequence of a working release: only `https://fhir.twiin.nl/ig/notifications/0.1.1-draft/` holds the IG; the root of the canonical holds no copy and no redirects, and no version is marked current. `0.1.0-draft` was removed from the site after `0.1.1-draft` was published ([TwiinNL/fhir#9](https://github.com/TwiinNL/fhir/pull/9)); the git tag `v0.1.0-draft` remains. Milestone `0.1.1`, with the same content, follows once a publisher release contains the fix.
 
 The IG refers to "TA Notifications 0.9 (draft)" in `index.md` and this README, without a link.
 
 - TODO: link "TA Notifications 0.9" in `index.md` and this README in a patch release, once 0.9 is published.
 
-`releaseLabel` is "Draft – normative only when referenced by the Twiin afsprakenstelsel". `publication-request.json` is for the second publication (`-go-publish` to `ig/` of TwiinNL/fhir; the package-list of `0.1.0-draft` must exist there); publishing itself is a separate step.
+`releaseLabel` is "Draft – normative only when referenced by the Twiin afsprakenstelsel". `publication-request.json` is for the second publication (`-go-publish` to `ig/` of TwiinNL/fhir; the package-list of the IG must exist there); publishing itself is a separate step.
 
 ## OIDs
 
