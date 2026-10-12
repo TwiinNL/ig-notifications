@@ -11,6 +11,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    env:
+      # Pinned: the errors check below depends on the qa.json layout of this version.
+      PUBLISHER_VERSION: 3.0.0
+      PUBLISHER_SHA256: b8403abe5a438ddb9a3a07e02ad925f2c4bbbd9e903c49ecff50fcb481ec64ad
+      # Pinned to 7.0.1, the org.hl7.fhir.core version inside IG Publisher 3.0.0; update both together.
+      VALIDATOR_VERSION: 7.0.1
+      VALIDATOR_SHA256: 1178b6a3a3fe98d9cd9545cadee505274967332466001d857e4d8bed7138a5bc
+      # Jekyll comes from the locked Gemfile; the publisher calls `jekyll` from the PATH.
+      BUNDLE_GEMFILE: ${{ github.workspace }}/.github/jekyll/Gemfile
+      JEKYLL_NO_BUNDLER_REQUIRE: '1'
     steps:
       - uses: actions/checkout@v7
 
@@ -19,12 +29,23 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      # Installs the gems of .github/jekyll/Gemfile.lock and caches them on the lock file.
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
+          bundler-cache: true
 
-      - name: Install Jekyll
-        run: gem install jekyll
+      # The publisher runs `jekyll` from the PATH; the wrapper makes that run the locked gems.
+      - name: Put Jekyll on the PATH
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          {
+            echo '#!/usr/bin/env bash'
+            echo 'exec bundle exec jekyll "$@"'
+          } > "$RUNNER_TEMP/bin/jekyll"
+          chmod +x "$RUNNER_TEMP/bin/jekyll"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/bin/jekyll" --version
 
       - uses: actions/setup-node@v7
         with:
@@ -33,26 +54,56 @@ jobs:
       - name: Install SUSHI
         run: npm install -g fsh-sushi
 
+      # The key of the package cache holds what decides which packages a build needs: the template
+      # (ig.ini), the dependencies (not the rest of the IG definition, so a title edit keeps the
+      # cache), the pinned publisher and validator, the install scripts with their checksums and
+      # .github/fhir-packages.lock, the list of every package a build ends up with. No
+      # restore-keys: a partial match could restore packages of another dependency set.
+      - name: Compute package cache key
+        id: pkgkey
+        run: |
+          echo "deps=$({
+            grep -E '^template' ig.ini
+            awk '/^dependencies:/{f=1;next} /^[^ #]/{f=0} f' sushi-config.yaml | grep -vE '^[[:space:]]*(#|$)' || true
+          } | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      # The jars are only a download cache: every run still checks their sha-256 below, also
+      # when they come from the cache.
+      - name: Cache tool jars
+        uses: actions/cache@v6
+        with:
+          path: |
+            input-cache/publisher.jar
+            input-cache/validator_cli.jar
+          key: jars-${{ runner.os }}-publisher-${{ env.PUBLISHER_VERSION }}-${{ env.PUBLISHER_SHA256 }}-validator-${{ env.VALIDATOR_VERSION }}-${{ env.VALIDATOR_SHA256 }}
+
+      # Saved at the end of a successful job only, so after the package set check below.
+      - name: Cache FHIR packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.fhir/packages
+          key: fhir-packages-${{ runner.os }}-${{ env.PUBLISHER_VERSION }}-${{ env.PUBLISHER_SHA256 }}-${{ env.VALIDATOR_VERSION }}-${{ env.VALIDATOR_SHA256 }}-${{ steps.pkgkey.outputs.deps }}-${{ hashFiles('.github/fhir-packages.lock', '.github/scripts/install-*.sh') }}
+
+      # Not taken from the cache: SUSHI must see the package as a build without cache does, and
+      # the Backport workaround below installs it again, checked, after SUSHI.
+      - name: Drop cached Backport package
+        run: rm -rf "$HOME/.fhir/packages/hl7.fhir.uv.subscriptions-backport.r4#1.1.0"
+
       - name: Run SUSHI
         run: sushi build .
 
-      # Pinned: the errors check below depends on the qa.json layout of this version.
       - name: Download IG Publisher
-        env:
-          PUBLISHER_VERSION: 3.0.0
         run: |
           mkdir -p input-cache
-          curl -sSfL -o input-cache/publisher.jar \
-            "https://github.com/HL7/fhir-ig-publisher/releases/download/${PUBLISHER_VERSION}/publisher.jar"
+          if [ ! -f input-cache/publisher.jar ]; then
+            curl -sSfL -o input-cache/publisher.jar \
+              "https://github.com/HL7/fhir-ig-publisher/releases/download/${PUBLISHER_VERSION}/publisher.jar"
+          fi
+          echo "${PUBLISHER_SHA256}  input-cache/publisher.jar" | shasum -a 256 -c -
 
-      # The published package has an empty .index.json, so the publisher finds none of
-      # its resources. Without the index file, the publisher rebuilds it. See known-issues.md.
+      # The package comes in through the dependency in sushi-config.yaml. See known-issues.md.
       - name: Work around empty index of Backport package
-        run: |
-          dir="$HOME/.fhir/packages/hl7.fhir.uv.subscriptions-backport.r4#1.1.0"
-          mkdir -p "$dir"
-          curl -sSfL "https://packages.fhir.org/hl7.fhir.uv.subscriptions-backport.r4/1.1.0" | tar xz -C "$dir"
-          rm "$dir/package/.index.json"
+        run: .github/scripts/install-backport.sh
 
       - name: Build IG
         run: java -jar input-cache/publisher.jar -ig . -no-sushi
@@ -85,13 +136,16 @@ jobs:
       # with the text in its .expect file. Validator pinned to 7.0.1, the org.hl7.fhir.core
       # version inside IG Publisher 3.0.0; update both together.
       - name: Download validator
-        env:
-          VALIDATOR_VERSION: 7.0.1
-          VALIDATOR_SHA256: 1178b6a3a3fe98d9cd9545cadee505274967332466001d857e4d8bed7138a5bc
         run: |
-          curl -sSfL -o input-cache/validator_cli.jar \
-            "https://github.com/hapifhir/org.hl7.fhir.core/releases/download/${VALIDATOR_VERSION}/validator_cli.jar"
+          if [ ! -f input-cache/validator_cli.jar ]; then
+            curl -sSfL -o input-cache/validator_cli.jar \
+              "https://github.com/hapifhir/org.hl7.fhir.core/releases/download/${VALIDATOR_VERSION}/validator_cli.jar"
+          fi
           echo "${VALIDATOR_SHA256}  input-cache/validator_cli.jar" | shasum -a 256 -c -
 
       - name: Validate invalid examples
         run: test/validate-invalid.sh input-cache/validator_cli.jar
+
+      # Last step, so that a failed job never saves its packages to the cache.
+      - name: Check package set against lock file
+        run: .github/scripts/check-package-set.sh
