@@ -6,7 +6,7 @@ Applies to: IG Publisher 3.0.0, `-go-publish` with `mode: milestone` (or `techni
 
 After both publication builds succeed, the run stops with `java.lang.Error: The folder <temp>/ig-builds/<package>#<version>-milestone/output is not inside the website root folder <temp>/web-root/run-<date>` (`IGReleaseRedirectionBuilder.java:158`, called from `PublicationProcess.java:748`). The milestone build output is never inside the working web root, so every milestone publication fails. Observed in a trial run on 2026-10-09 against a copy of TwiinNL/fhir.
 
-Fixed upstream in [HL7/fhir-ig-publisher d64c08c](https://github.com/HL7/fhir-ig-publisher/commit/d64c08c) ("Fix publication crash when building redirects for the milestone build output", 8 October 2026), not yet in a release. Workaround: publish `0.1.0-draft` with `mode: working`. Publish milestone `0.1.0` with the same content once a publisher release contains the fix, and pin that version in CI.
+Fixed upstream in [HL7/fhir-ig-publisher d64c08c](https://github.com/HL7/fhir-ig-publisher/commit/d64c08c) ("Fix publication crash when building redirects for the milestone build output", 8 October 2026), not yet in a release. Workaround: publish `0.1.0-draft` and `0.1.1-draft` with `mode: working`; `0.1.0-draft` is removed from the site after `0.1.1-draft` is published. Publish a milestone with the same content once a publisher release contains the fix, and pin that version in CI.
 
 ## Backport IG declares FHIR 4.0.0
 
