@@ -80,3 +80,18 @@ jobs:
       # in known-errors.txt.
       - name: Fail on unknown errors in QA report
         run: python3 .github/scripts/check-qa.py
+
+      # Every instance in test/invalid/ must be reported with the invariant in its file name, or
+      # with the text in its .expect file. Validator pinned to 7.0.1, the org.hl7.fhir.core
+      # version inside IG Publisher 3.0.0; update both together.
+      - name: Download validator
+        env:
+          VALIDATOR_VERSION: 7.0.1
+          VALIDATOR_SHA256: 1178b6a3a3fe98d9cd9545cadee505274967332466001d857e4d8bed7138a5bc
+        run: |
+          curl -sSfL -o input-cache/validator_cli.jar \
+            "https://github.com/hapifhir/org.hl7.fhir.core/releases/download/${VALIDATOR_VERSION}/validator_cli.jar"
+          echo "${VALIDATOR_SHA256}  input-cache/validator_cli.jar" | shasum -a 256 -c -
+
+      - name: Validate invalid examples
+        run: test/validate-invalid.sh input-cache/validator_cli.jar

@@ -54,7 +54,7 @@ The template is pinned to `fhir2.base.template#0.1.0`. `fhir.base.template` is n
 test/validate-invalid.sh path/to/validator_cli.jar
 ```
 
-The script validates each file against `output/package.tgz` and fails if the validator does not report the invariant named in the file name.
+The script validates each file against `output/package.tgz` and fails if the validator does not report the invariant named in the file name. A file that violates something other than an invariant has a `<name>.expect` next to it with a text the reported issue must contain. CI runs it after the build (step "Validate invalid examples") with validator_cli.jar 7.0.1, the core version of IG Publisher 3.0.0, and fails if an instance is not reported as expected.
 
 ## CI
 
@@ -63,6 +63,8 @@ The script validates each file against `output/package.tgz` and fails if the val
 The runner is pinned to `ubuntu-24.04` (not `ubuntu-latest`), so a change of the GitHub-hosted image does not alter the build unnoticed. Moving to a newer Ubuntu gets its own PR.
 
 The build fails on every publisher error that is not listed in [known-errors.txt](known-errors.txt) (see [known-issues.md](known-issues.md)). The publisher exit code cannot be used for this: it exits with 0 on a build whose `qa.html` lists errors (see [ig-core](https://github.com/TwiinNL/ig-core)). Warnings and hints do not fail the build. Errors cannot be suppressed via `input/ignoreWarnings.txt`.
+
+After the QA check, the step "Download validator" fetches validator_cli.jar 7.0.1 (`VALIDATOR_VERSION`, sha-256 checked) and "Validate invalid examples" runs `test/validate-invalid.sh`; see [Invariant tests](#invariant-tests). Update the validator together with the publisher.
 
 `.github/scripts/check-qa.py` reads the errors from two files. `output/qa.xml` is a FHIR Bundle of OperationOutcomes written by the publisher; it is structured (severity, message and expression as separate elements), and each error becomes one line `<location>: <message>`, with the issue's `expression` as location (file name if there is none). `output/qa.txt` also lists the errors of the HTML check (for example the WCAG heading check on the generated pages), which `qa.xml` does not contain (`qa.json` only counts them); each `ERROR:` line becomes one line `<location>: <message>`, with the absolute path of `output/` replaced by `output/`. Every line must match a line in `known-errors.txt` exactly. Matching is on text and location, not on count. As a cross-check the script requires the errors of both files, counted once when both list them, to equal `errs` in `output/qa.json`, and fails otherwise.
 
