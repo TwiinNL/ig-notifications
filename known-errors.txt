@@ -1,5 +1,10 @@
 # Publisher errors that are accepted, one per line, matched exactly as "<location>: <message>".
+# The errors and warnings of the Publication Request row of qa.html use the location "Publication Request".
 # See known-issues.md before adding anything here.
 ImplementationGuide/nl.twiin.fhir.r4.notifications: This IG is version 4.0.1, while the IG 'hl7.fhir.uv.subscriptions-backport.r4' is from version 4.0.0
 Parameters.parameter.value: The reference http://hl7.org/fhir/ValueSet/subscription-notification-type could not be resolved
 StructureDefinition/twiin-subscription-status: StructureDefinition.snapshot.element[42].binding.valueSet: A definition could not be found for Canonical URL 'http://hl7.org/fhir/ValueSet/subscription-notification-type'
+# Publication Request of main: 0.1.0-draft is already published, so the publisher rejects this request. Fixed by the request of 0.1.1-draft (PR #12, release/0.1.1-draft); remove these three lines when that is merged.
+Publication Request: Version 0.1.0-draft has already been published
+Publication Request: This is not the first publication, so first must not be true
+Publication Request: Publication Request is for version v0.1.0-draft which is already published
