@@ -55,8 +55,8 @@ jobs:
         run: npm install -g fsh-sushi
 
       # The key of the package cache holds what decides which packages a build needs: the template
-      # (ig.ini), the dependencies (not the rest of the IG definition, so a title edit keeps the
-      # cache), the pinned publisher and validator, the install scripts with their checksums and
+      # (ig.ini, and the version and sha-256 of its release asset), the dependencies (not the rest
+      # of the IG definition, so a title edit keeps the cache), the pinned publisher and validator, the install scripts with their checksums and
       # .github/fhir-packages.lock, the list of every package a build ends up with. No
       # restore-keys: a partial match could restore packages of another dependency set.
       - name: Compute package cache key
@@ -64,6 +64,7 @@ jobs:
         run: |
           echo "deps=$({
             grep -E '^template' ig.ini
+            grep -E '^(version|sha)=' .github/scripts/install-template.sh
             awk '/^dependencies:/{f=1;next} /^[^ #]/{f=0} f' sushi-config.yaml | grep -vE '^[[:space:]]*(#|$)' || true
           } | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
@@ -105,6 +106,12 @@ jobs:
       - name: Work around empty index of Backport package
         run: .github/scripts/install-backport.sh
 
+      # Not in the package cache of the registry: the template is the asset of a release of
+      # TwiinNL/ig-template. Always installed from a fresh download with its sha-256 checked, so
+      # a restored cache entry is replaced, not trusted.
+      - name: Install twiin.base.template
+        run: .github/scripts/install-template.sh
+
       - name: Build IG
         run: java -jar input-cache/publisher.jar -ig . -no-sushi
 
@@ -116,13 +123,11 @@ jobs:
           path: output/
           if-no-files-found: warn
 
-      # The template's lang-redirects.js is overridden by input/images/assets/js/; fail if the
-      # override did not take effect or the redirect does not work. See known-issues.md.
+      # The redirect script comes from twiin.base.template; fail if the redirect does not work.
       - name: Test language redirect
         run: node test/lang-redirects.test.js
 
-      # The template's fragment-pagebegin.html is overridden by input/includes/ to show the release
-      # label; fail if the label is missing or the template file changed. See known-issues.md.
+      # The header comes from twiin.base.template; fail if the release label is missing.
       - name: Test release label
         run: node test/release-label.test.js
 
