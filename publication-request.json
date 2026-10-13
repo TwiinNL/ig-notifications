@@ -1,10 +1,10 @@
 {
   "package-id": "nl.twiin.fhir.r4.notifications",
-  "version": "0.1.1-draft",
+  "version": "0.1.2-draft",
   "mode": "working",
-  "status": "draft",
+  "status": "bogus",
   "sequence": "Release 1",
-  "path": "https://fhir.twiin.nl/ig/notifications/0.1.1-draft",
+  "path": "https://fhir.twiin.nl/ig/notifications/0.1.2-draft",
   "desc": "Second draft publication, technical specification of TA Notifications 0.9, in the Twiin house style",
   "first": false,
   "registry-description": "Technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel.",
