@@ -1,11 +1,11 @@
 # ig-notifications
 
-FHIR R4 implementation guide for the technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel (TA Notifications 0.9 (draft)). It is based on the HL7 FHIR Subscriptions R5 Backport IG 1.1.0 (STU 1.1).
+FHIR R4 implementation guide for the technical specification of TA Notifications, part of the technical core of the Twiin Afsprakenstelsel (TA Notifications 0.10 (draft)). It is based on the HL7 FHIR Subscriptions R5 Backport IG 1.1.0 (STU 1.1).
 
 - Package id: `nl.twiin.fhir.r4.notifications`
 - Canonical: https://fhir.twiin.nl/ig/notifications
 - FHIR version: 4.0.1
-- Version: 0.1.1-draft (working release, see [Release 0.1.1-draft](#release-011-draft))
+- Version: 0.2.0 (the release notes below are for 0.1.1-draft; see [Release 0.1.1-draft](#release-011-draft))
 - Publisher: Twiin
 - Dependencies: `hl7.fhir.uv.subscriptions-backport.r4#1.1.0` only
 
@@ -23,9 +23,9 @@ The second publication is the working release `0.1.1-draft` (`mode: working` in 
 
 Consequence of a working release: only `https://fhir.twiin.nl/ig/notifications/0.1.1-draft/` holds the IG; the root of the canonical holds no copy and no redirects, and no version is marked current. `0.1.0-draft` is removed from the site after `0.1.1-draft` is published. Milestone `0.1.1`, with the same content, follows once a publisher release contains the fix.
 
-The IG refers to "TA Notifications 0.9 (draft)" in `index.md` and this README, without a link.
+The IG refers to "TA Notifications 0.10 (draft)" in `index.md` and this README, without a link.
 
-- TODO: link "TA Notifications 0.9" in `index.md` and this README in a patch release, once 0.9 is published.
+- TODO: link "TA Notifications 0.10" in `index.md` and this README in a patch release, once 0.10 is published.
 
 `releaseLabel` is "Draft – normative only when referenced by the Twiin afsprakenstelsel". `publication-request.json` is for the second publication (`-go-publish` to `ig/` of TwiinNL/fhir; the package-list of `0.1.0-draft` must exist there); publishing itself is a separate step.
 
@@ -46,7 +46,7 @@ Requires Java, Node (SUSHI) and Jekyll. The template is set in `ig.ini`, not in 
 
 ### Template
 
-The IG is built with `twiin.base.template#0.1.1` ([TwiinNL/ig-template](https://github.com/TwiinNL/ig-template)), the Twiin house style on top of `fhir2.base.template#0.1.0`. The template is not on the FHIR package registry: it is the asset `twiin.base.template-0.1.1.tgz` of [release v0.1.1](https://github.com/TwiinNL/ig-template/releases/tag/v0.1.1), sha-256 `e95e60fa5b463cadd4ef34ad4b6c0dcee32fa05d02bfd649b4ff90960d22b123`. `.github/scripts/install-template.sh` downloads it, fails on a different sha-256, and unpacks it into `~/.fhir/packages/twiin.base.template#0.1.1`, where the publisher looks for it (it replaces what is there). Run it before `_genonce.sh`; `_genonce.sh` itself is the unmodified HL7 script and does not download templates. CI runs the same script (step "Install twiin.base.template"). A new template version means changing `ig.ini` and the version and sha-256 in the script together; the script fails if they differ. Version and sha-256 are part of the key of the package cache.
+The IG is built with `twiin.base.template#0.1.2` ([TwiinNL/ig-template](https://github.com/TwiinNL/ig-template)), the Twiin house style on top of `fhir2.base.template#0.1.0`. The template is not on the FHIR package registry: it is the asset `twiin.base.template-0.1.2.tgz` of [release v0.1.2](https://github.com/TwiinNL/ig-template/releases/tag/v0.1.2), sha-256 `2d12bcee5b57c91150a70488a186105744061b7c390b8e7cc7559ac77925e312`. `.github/scripts/install-template.sh` downloads it, fails on a different sha-256, and unpacks it into `~/.fhir/packages/twiin.base.template#0.1.2`, where the publisher looks for it (it replaces what is there). Run it before `_genonce.sh`; `_genonce.sh` itself is the unmodified HL7 script and does not download templates. CI runs the same script (step "Install twiin.base.template"). A new template version means changing `ig.ini` and the version and sha-256 in the script together; the script fails if they differ. Version and sha-256 are part of the key of the package cache.
 
 `fhir2.base.template#0.1.0`, the base of the template, is downloaded by the publisher and stays in `.github/fhir-packages.lock`. `fhir.base.template` is no longer supported: according to the [FHIR security notice of 17 March 2026](https://fhir.org/guides/security-notices/2026-03-npm-dependencies.html) the IG Publisher will refuse such IGs "at some stage in the near future", not yet. `fhir2.base.template` builds all pages into `output/en/`; the pages in the root of `output/` are redirect stubs.
 

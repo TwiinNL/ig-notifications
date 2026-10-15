@@ -15,7 +15,7 @@ The `authorization-type` (Coding) and `authorization-value` (string) parts of `n
 Some invariants interpret the TA:
 
 - `twiin-sub-1` checks that `criteria` is an http(s) URL without a query. It is a heuristic and has severity warning.
-- `twiin-ntf-2` reads "the request MUST match a request to the $status operation" as exact string equality between `request.url` and the subscription reference followed by `/$status`.
+- `twiin-ntf-2` reads "the request SHALL match a request to the $status operation" as exact string equality between `request.url` and the subscription reference followed by `/$status`.
 
 ### Terminology
 
