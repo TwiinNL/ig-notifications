@@ -5,7 +5,7 @@ FHIR R4 implementation guide for the technical specification of TA Notifications
 - Package id: `nl.twiin.fhir.r4.notifications`
 - Canonical: https://fhir.twiin.nl/ig/notifications
 - FHIR version: 4.0.1
-- Version: 0.2.0 (the release notes below are for 0.1.1-draft; see [Release 0.1.1-draft](#release-011-draft))
+- Version: 0.2.0-draft (the release notes below are for 0.1.1-draft; see [Release 0.1.1-draft](#release-011-draft))
 - Publisher: Twiin
 - Dependencies: `hl7.fhir.uv.subscriptions-backport.r4#1.1.0` only
 
