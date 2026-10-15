@@ -43,9 +43,19 @@ Applies to: IG Publisher 3.0.0, `hl7.fhir.uv.subscriptions-backport.r4#1.1.0`. A
 
 Related warnings on each example: `ValueSet 'http://hl7.org/fhir/ValueSet/subscription-notification-type' not found`.
 
-## Not fixed by `twiin.base.template#0.1.1`
+## Binding on `channel.payload` cannot be expanded
 
-Applies to: `twiin.base.template#0.1.1` (based on `fhir2.base.template#0.1.0`) with IG Publisher 3.0.0. The template fixes the redirect to `en/` for non-English browsers, the empty release label, the doubled `<h2 id="root">` on profile history pages and the not well formed profile pages (see its [README](https://github.com/TwiinNL/ig-template)); this repository has no workarounds for those any more. What remains, the same with `fhir2.base.template#0.1.0` alone and also listed in the template README:
+Applies to: IG Publisher 3.0.0, `hl7.fhir.uv.subscriptions-backport.r4#1.1.0`. Not allowlisted (warning).
+
+`Twiin Subscription.Subscription.channel.payload: Binding http://hl7.org/fhir/ValueSet/mimetypes|4.0.0 could not be expanded`. The binding comes from the base Subscription resource of the Backport package, which is based on FHIR 4.0.0 (see above); the publisher cannot expand `mimetypes|4.0.0`. This IG binds `channel.payload` to its own value set `twiin-notification-formats`.
+
+## No OIDs before 1.0.0
+
+Warning `The resource ValueSet/twiin-notification-formats should have an OID assigned ...` is suppressed in `input/ignoreWarnings.txt`. No OIDs are assigned before version 1.0.0. The same suggestion for the other resources is reported as information and is not suppressed.
+
+## Not fixed by `twiin.base.template#0.1.2`
+
+Applies to: `twiin.base.template#0.1.2` (based on `fhir2.base.template#0.1.0`) with IG Publisher 3.0.0. The template fixes the redirect to `en/` for non-English browsers, the empty release label, the doubled `<h2 id="root">` on profile history pages and the not well formed profile pages (see its [README](https://github.com/TwiinNL/ig-template)); this repository has no workarounds for those any more. What remains, the same with `fhir2.base.template#0.1.0` alone and also listed in the template README:
 
 - `searchform.html` has its own markup that the publisher reports as not well formed: 8 warnings for `output/searchform.html` and 8 for `output/en/searchform.html` (16 in total, not allowlisted, warnings do not fail the build).
 - Profile history pages are not in the page list of the publisher, so their breadcrumb bar is empty and the heading has no section number.

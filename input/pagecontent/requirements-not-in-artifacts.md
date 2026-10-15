@@ -16,6 +16,7 @@ This page is informative. Many requirements of TA Notifications concern behaviou
 | Idempotent processing | Implementation Obligations |
 | Permitted changes on update, and who may update | Updating a Subscription |
 | Replacement of a Subscription | Replacing a Subscription |
+| Ending a Subscription: set status to off, not delete; the CapabilityStatement can express this only as SHOULD-NOT for the delete interaction, which is weaker than the TA requirement | Creating a Subscription; Sequence Diagram |
 | Heartbeat use and interval | Heartbeat Notification |
 | Definition of SubscriptionTopics | Resource Definitions → SubscriptionTopic; Choosing a Resource Type to Monitor |
 | Requirements on use-case-specific technical agreements | Requirements on Use-Case-Specific Technical Agreements |
