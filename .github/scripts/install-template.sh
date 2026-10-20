@@ -8,8 +8,8 @@ set -euo pipefail
 
 cache="${FHIR_PACKAGE_CACHE:-$HOME/.fhir/packages}"
 name=twiin.base.template
-version=0.1.5
-sha=75a3e6f2e874757fc4065d7ffbd7bfe36854201641b7648ce9a1146b05776e8a
+version=0.1.6
+sha=bb825a94e659d948b5dcfa82f034258c91d8a41e7ecbfbb466da9362d29ee427
 url="https://github.com/TwiinNL/ig-template/releases/download/v$version/$name-$version.tgz"
 
 # ig.ini decides which template a build uses; this script must install that one.
